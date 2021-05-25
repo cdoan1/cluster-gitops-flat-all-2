@@ -1,0 +1,201 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sno00096
+  labels:
+    name: sno00096
+---
+apiVersion: v1
+data:
+  password: c2VjcmV0ZQ==
+  username: YWRtaW4=
+kind: Secret
+metadata:
+  name: sno00096-bmc-secret
+  namespace: sno00096
+type: Opaque
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: NMStateConfig
+metadata:
+  name: sno00096
+  namespace: sno00096
+  labels:
+    acm-ai-sno-test-sno00096: sno00096
+spec:
+  config:
+    interfaces:
+      - name: eth0
+        type: ethernet
+        state: up
+        mac-address: '52:54:00:76:05:0b'
+        ipv4:
+          enabled: true
+          address:
+            - ip: '198.18.8.213'
+              prefix-length: 21
+          dhcp: false
+    dns-resolver:
+      config:
+        server:
+          - '198.18.8.1'
+    routes:
+      config:
+        - destination: 0.0.0.0/0
+          next-hop-address: '198.18.8.1'
+          next-hop-interface: eth0
+          table-id: 254
+  interfaces:
+    - name: "eth0"
+      macAddress: '52:54:00:76:05:0b'
+---
+apiVersion: v1
+data:
+  .dockerconfigjson: ewogICJhdXRocyI6IHsKICAgICJjbG91ZC5vcGVuc2hpZnQuY29tIjogewogICAgICAiYXV0aCI6ICJibUZ0WlRwd1lYTnpDZz09IiwKICAgICAgImVtYWlsIjogImFrcnpvc0ByaC5jb20iCiAgICB9LAogICAgInF1YXkuaW8iOiB7CiAgICAgICJhdXRoIjogImJtRnRaVHB3WVhOekNnPT0iLAogICAgICAiZW1haWwiOiAiYWtyem9zQHJoLmNvbSIKICAgIH0sCiAgICAicXVheS5pbzo0NDMiOiB7CiAgICAgICJhdXRoIjogImJtRnRaVHB3WVhOekNnPT0iLAogICAgICAiZW1haWwiOiAiYWtyem9zQHJoLmNvbSIKICAgIH0sCiAgICAicmVnaXN0cnkuY2kub3BlbnNoaWZ0Lm9yZyI6IHsKICAgICAgImF1dGgiOiAiYm1GdFpUcHdZWE56Q2c9PSIKICAgIH0sCiAgICAicmVnaXN0cnkuY29ubmVjdC5yZWRoYXQuY29tIjogewogICAgICAiYXV0aCI6ICJibUZ0WlRwd1lYTnpDZz09IiwKICAgICAgImVtYWlsIjogImFrcnpvc0ByaC5jb20iCiAgICB9LAogICAgInJlZ2lzdHJ5LnJlZGhhdC5pbyI6IHsKICAgICAgImF1dGgiOiAiYm1GdFpUcHdZWE56Q2c9PSIsCiAgICAgICJlbWFpbCI6ICJha3J6b3NAcmguY29tIgogICAgfQogIH0KfQo=
+kind: Secret
+metadata:
+  name: assisted-deployment-pull-secret
+  namespace: sno00096
+type: kubernetes.io/dockerconfigjson
+---
+apiVersion: extensions.hive.openshift.io/v1beta1
+kind: AgentClusterInstall
+metadata:
+  annotations:
+    agent-install.openshift.io/install-config-overrides: '{"networking":{"networkType":"OVNKubernetes"}}'
+  name: sno00096
+  namespace: sno00096
+spec:
+  imageSetRef:
+    name: "openshift-4.8.0-fc.3"
+  clusterDeploymentRef:
+    name: sno00096
+  networking:
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    serviceNetwork:
+      - 172.30.0.0/16
+    machineNetwork:
+      - cidr: 198.18.8.0/21
+  sshPublicKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC1ab3Y+z4/OXNJpAgf7NaAL62es5fSpgqRzQZgphmWiasM/3cdaTSYCSoYaobaHsnRx1D0APp0ZtJJ5msY9sYoTaG/Z77U6pRKC/3ZAMUJNpeP4kxK3caP2jHdnCbUBKR5o3A18neP6axZU64583QBVF83RgBD6u3csYQloGvqe9TZheKhTLb7qwfDYrowaRFdJhoG8pRWEkV0UQd4PPS0hhm+PBLU9sjFE62q+hJ+Ohw4AJgVgsmGEKjLG1eF2uYsu7WE9k0fNN4iYkQD6ipOc2DZpAvXQKYSC0RifkAzuLzUqqf7b2K5ZZOUQyj1vhBCbpZiyv/bKWCYk3/GkbyMCxIrjYS9YaYBh3E4V0QxzYZtoyxYkaZNaLc0HReHpYbvq1IMy0WZeoKr2RTcSR7JvNtrF5t9vO4BQei4cE8+XhUJkP7JvAo16VypbkwelakmxHwpt7t5yVSloVslTrlTwQwMu9aQ1x003BPZBVdqSyrjrWvVGELFzmMMMxkoEbk='
+  provisionRequirements:
+    controlPlaneAgents: 1
+    workerAgents: 0
+  # controlPlane:
+  # compute:
+  # clusterMetadata:
+  #   name: ""
+  # manifestsConfigMapRef:
+  #   name: ""
+  # apiVIP: ""
+  # ingressVIP: ""
+
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: sno00096
+  namespace: sno00096
+spec:
+  baseDomain: rdu2.scalelab.redhat.com
+  clusterName: sno00096
+  clusterInstallRef:
+    group: extensions.hive.openshift.io
+    version: v1beta1
+    kind: AgentClusterInstall
+    name: sno00096
+  platform:
+    agentBareMetal:
+      agentSelector:
+        matchLabels:
+          cluster-name: sno00096
+  pullSecretRef:
+    name: assisted-deployment-pull-secret
+
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: sno00096
+  namespace: sno00096
+spec:
+  clusterName: sno00096
+  clusterNamespace: sno00096
+  clusterLabels:
+    cloud: auto-detect
+    vendor: auto-detect
+
+  observability:
+    enabled: false
+
+  iamPolicyController:
+    enabled: false
+
+  policyController:
+    enabled: false
+
+  searchCollector:
+    enabled: false
+
+  workManager:
+    enabled: true
+
+  certPolicyController:
+    enabled: false
+
+  applicationManager:
+    enabled: false
+
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  name: sno00096
+  labels:
+    name: sno00096
+    observability: disabled
+spec:
+  hubAcceptsClient: true
+
+---
+apiVersion: agent-install.openshift.io/v1beta1
+kind: InfraEnv
+metadata:
+  name: sno00096
+  namespace: sno00096
+spec:
+  clusterRef:
+    name: sno00096
+    namespace: sno00096
+  sshAuthorizedKey: 'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC1ab3Y+z4/OXNJpAgf7NaAL62es5fSpgqRzQZgphmWiasM/3cdaTSYCSoYaobaHsnRx1D0APp0ZtJJ5msY9sYoTaG/Z77U6pRKC/3ZAMUJNpeP4kxK3caP2jHdnCbUBKR5o3A18neP6axZU64583QBVF83RgBD6u3csYQloGvqe9TZheKhTLb7qwfDYrowaRFdJhoG8pRWEkV0UQd4PPS0hhm+PBLU9sjFE62q+hJ+Ohw4AJgVgsmGEKjLG1eF2uYsu7WE9k0fNN4iYkQD6ipOc2DZpAvXQKYSC0RifkAzuLzUqqf7b2K5ZZOUQyj1vhBCbpZiyv/bKWCYk3/GkbyMCxIrjYS9YaYBh3E4V0QxzYZtoyxYkaZNaLc0HReHpYbvq1IMy0WZeoKr2RTcSR7JvNtrF5t9vO4BQei4cE8+XhUJkP7JvAo16VypbkwelakmxHwpt7t5yVSloVslTrlTwQwMu9aQ1x003BPZBVdqSyrjrWvVGELFzmMMMxkoEbk='
+  agentLabelSelector:
+    matchLabels:
+      cluster-name: sno00096
+  pullSecretRef:
+    name: assisted-deployment-pull-secret
+  nmStateConfigLabelSelector:
+    matchLabels:
+      acm-ai-sno-test-sno00096: sno00096
+---
+apiVersion: metal3.io/v1alpha1
+kind: BareMetalHost
+metadata:
+  name: sno00096
+  namespace: sno00096
+  annotations:
+    inspect.metal3.io: disabled
+    bmac.agent-install.openshift.io/hostname: "sno00096"
+  labels:
+    infraenvs.agent-install.openshift.io: "sno00096"
+spec:
+  bootMode: "UEFI"
+  bmc:
+    address: 'redfish-virtualmedia+http://198.18.8.20:9000/redfish/v1/Systems/b348a340-a2ab-4aed-a7c6-8d5e069d0291'
+    disableCertificateVerification: true
+    credentialsName: sno00096-bmc-secret
+  bootMACAddress: '52:54:00:76:05:0b'
+  automatedCleaningMode: disabled
+  online: true
+
